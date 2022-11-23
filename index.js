@@ -1,6 +1,6 @@
 import Web3 from "web3";
 import fetch from 'node-fetch';
-import * as cfg from "./config.json"
+import * as cfg from "./config.json" assert {type: "json"};
 import {Telegraf} from "telegraf";
 
 function genAccount(web3) {
@@ -41,13 +41,13 @@ async function batchQueryAccountEth(web3, accounts) {
         return !_r.error
     })
     const rich = successResult.filter(_r => {
-        return _r.result !== '0x0'
+        return web3.utils.hexToNumber(_r.result) > 0
     })
     if (rich?.length > 0) {
         const hash = rich.reduce((per, cur) => {
             return `${per}\nhttps://bscscan.com/address/${accounts[cur.id].address} - ${accounts[cur.id].privateKey}`
         }, "")
-        bot.telegram.sendMessage("-1001128118577", hash).catch(e => {
+        bot.telegram.sendMessage(cfg.default.chatId, hash).catch(e => {
             console.log(e)
         })
     }
