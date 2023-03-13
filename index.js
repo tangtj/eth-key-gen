@@ -61,7 +61,6 @@ async function cal(web3) {
 
 async function main() {
 
-    bot.launch()
     const web3 = new Web3(cfg.rpc);
 
     setInterval(function () {
